@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { skills } from '../../utils/constants'
-// import { SubTitle } from '../HeroSection/HeroStyle'
 
 const Container = styled.div`
   display: flex;
@@ -26,13 +25,6 @@ const Wrapper = styled.div`
     flex-direction: column;
   }
 `
-
-const SubWrapper = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  width: 250px;
-`;
 
 export const Title = styled.div`
   font-size: 42px;
