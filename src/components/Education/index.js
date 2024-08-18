@@ -116,14 +116,15 @@ const Education = () => {
             }
         );
 
-        refs.current.forEach((ref) => {
+        const currentRefs = refs.current;
+        currentRefs.forEach((ref) => {
             if (ref) {
                 observer.observe(ref);
             }
         });
 
         return () => {
-            refs.current.forEach((ref) => {
+            currentRefs.forEach((ref) => {
                 if (ref) {
                     observer.unobserve(ref);
                 }
