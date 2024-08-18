@@ -4,34 +4,35 @@ import { HeroContainer, HeroBg, HeroLeftContainer, Img, HeroRightContainer, Hero
 import MyPhoto from '../../images/MyPhoto.jpg';
 import Typewriter from 'typewriter-effect';
 import { Bio } from '../../utils/constants';
-import { useEffect, useRef } from 'react';
 
 const HeroSection = () => {
-    const sectionRef = useRef(null);
+  // const sectionRef = useRef(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Add your animation logic here
-            sectionRef.current.style.opacity = 1;
-            sectionRef.current.style.transform = 'translateY(0)';
-          }
-        });
-      },
-      { threshold: 0.5 } // Adjust the threshold as needed
-    );
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       entries.forEach((entry) => {
+  //         if (entry.isIntersecting) {
+  //           // Add your animation logic here
+  //           sectionRef.current.style.opacity = 1;
+  //           sectionRef.current.style.transform = 'translateY(0)';
+  //         }
+  //       });
+  //     },
+  //     { threshold: 0.5 } // Adjust the threshold as needed
+  //   );
 
-    observer.observe(sectionRef.current);
+  //   observer.observe(sectionRef.current);
 
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
+  //   return () => {
+  //     observer.disconnect();
+  //   };
+  // }, []);
 
     return (
-        <div id="about" ref={sectionRef} style={{ opacity: 0, transform: 'translateY(100px)' }}>
+        <div id="about" 
+        // ref={sectionRef} style={{ opacity: 0, transform: 'translateY(100px)' }}
+        >
             <HeroContainer>
                 <HeroBg>
                     <HeroBgAnimation />

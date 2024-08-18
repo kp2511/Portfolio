@@ -101,6 +101,18 @@ export const Img = styled.img`
   border-radius: 50%;
   border: 2px solid ${({ theme }) => theme.primary};
   /* aspect-ratio: 1/1; */
+  animation: slideLeft 0.8s ease-out;
+  -webkit-animation: slideLeft 0.8s ease-out;
+  @keyframes slideLeft {
+    0% {
+        transform: translateX(100%);
+        -webkit-transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(0);
+        -webkit-transform: translateX(0);
+    }
+  }
   @media (max-width: 768px) {
     max-width: 400px;
     max-height: 600px;

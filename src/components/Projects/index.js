@@ -1,10 +1,45 @@
-import React, { useState }  from 'react';
-import { Container, Wrapper, Title, Desc, CardContainer, ToggleButtonGroup, ToggleButton, Divider } from './ProjectsStyle';
+import React, { useEffect, useState, useRef }  from 'react';
+import { Container, Wrapper, Title, Desc, CardContainer, ToggleButtonGroup, ToggleButton, Divider, ProjectCardWrapper } from './ProjectsStyle';
 import ProjectCard from '../Cards/ProjectCards';
 import { projects } from '../../utils/constants';
 
 const Projects = ({ openModal, setOpenModal }) => {
   const [toggle, setToggle] = useState('all');
+  const [visibleItems, setVisibleItems] = useState({});
+  const refs = useRef([]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if(entry.isIntersecting) {
+          const index = entry.target.getAttribute('data-index');
+          setVisibleItems((prevState) => ({
+            ...prevState,
+            [index] : true
+          }));
+          observer.unobserve(entry.target);
+        }
+      })
+    }, {
+      rootMargin: "0px",
+      threshold: 0.1
+    });
+
+    refs.current.forEach((ref) => {
+      if(ref) {
+        observer.observe(ref);
+      }
+    });
+
+    return () => {
+      refs.current.forEach((ref) => {
+        if (ref) {
+          observer.unobserve(ref);
+        }
+      });
+    };
+  }, [])
+
   return (
     <Container id="projects">
       <Wrapper>
@@ -39,13 +74,29 @@ const Projects = ({ openModal, setOpenModal }) => {
         </ToggleButtonGroup>
         <CardContainer>
           {toggle === 'all' && projects
-            .map((project) => (
+            .map((project, index) => (
+              <ProjectCardWrapper
+                key={index}
+                ref={(el) => (refs.current[index] = el)}
+                data-index={index}
+                className={visibleItems[index] ? 'show' : ''}
+                style={{ transitionDelay: `${index * 0.1}s` }}
+              >
               <ProjectCard project={project} openModal={openModal} setOpenModal={setOpenModal}/>
+              </ProjectCardWrapper>
             ))}
           {projects
             .filter((item) => item.category === toggle)
-            .map((project) => (
+            .map((project, index) => (
+              <ProjectCardWrapper
+                key={index}
+                ref={(el) => (refs.current[index] = el)}
+                data-index={index}
+                className={visibleItems[index] ? 'show' : ''}
+                style={{ transitionDelay: `${index * 0.1}s` }}
+              >
               <ProjectCard project={project} openModal={openModal} setOpenModal={setOpenModal}/>
+              </ProjectCardWrapper>
             ))}
         </CardContainer>
       </Wrapper>

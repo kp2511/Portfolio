@@ -44,7 +44,7 @@ export const Desc = styled.div`
     max-width: 600px;
     color: ${({ theme }) => theme.text_secondary};
     @media (max-width: 768px) {
-        margin-top: 12px;
+        margin: 12px 16px 0px 16px;
         font-size: 16px;
     }
 `;
@@ -102,4 +102,14 @@ export const CardContainer = styled.div`
     // @media (max-width: 640px) {
     //     grid-template-columns: repeat(1, 1fr);
     // }
+`;
+
+export const ProjectCardWrapper = styled.div`
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    &.show {
+        opacity: 1;
+        transform: translateY(0px);
+    }
 `;

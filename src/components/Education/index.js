@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -56,7 +56,7 @@ const Desc = styled.div`
     max-width: 600px;
     color: ${({ theme }) => theme.text_secondary};
     @media (max-width: 768px) {
-        margin-top: 12px;
+        margin: 12px 16px 0px 16px;
         font-size: 16px;
     }
 `;
@@ -71,13 +71,66 @@ const TimelineSection = styled.div`
     justify-content: center;
     gap: 12px;
     @media (max-width: 660px) {
+        width: 90%;
         align-items: end;
     }
 `;
 
+const TimelineItemWrapper = styled.div`
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(100px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  @media (min-width: 768px) {
+    transform: translateX(100%);
+  }
+  &.show {
+    filter: blur(0); 
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
 
 
-const index = () => {
+const Education = () => {
+    const [visibleItems, setVisibleItems] = useState({});
+    const refs = useRef([]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const index = entry.target.getAttribute('data-index');
+                        setVisibleItems((prevState) => ({
+                            ...prevState,
+                            [index]: true,
+                        }));
+                        observer.unobserve(entry.target); // Stop observing once animated
+                    }
+                });
+            },
+            {
+                rootMargin: "0px",
+                threshold: 0.2, // Adjust as needed for when to trigger animation
+            }
+        );
+
+        refs.current.forEach((ref) => {
+            if (ref) {
+                observer.observe(ref);
+            }
+        });
+
+        return () => {
+            refs.current.forEach((ref) => {
+                if (ref) {
+                    observer.unobserve(ref);
+                }
+            });
+        };
+    }, []);
+
     return (
         <Container id="education">
             <Wrapper>
@@ -87,16 +140,25 @@ const index = () => {
                 </Desc>
                 <TimelineSection>
                     <Timeline>
-                        {education.map((education,index) => (
-                            <TimelineItem >
-                                <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                    <EducationCard education={education}/>
-                                </TimelineContent>
-                                <TimelineSeparator>
-                                    <TimelineDot variant="outlined" color="secondary" />
-                                    {index !== experiences.length  && <TimelineConnector style={{ background: '#854CE6' }} />}
-                                </TimelineSeparator>
-                            </TimelineItem>
+                        {education.map((education, index) => (
+                            <TimelineItemWrapper
+                                key={index}
+                                ref={(el) => (refs.current[index] = el)}
+                                data-index={index}
+                                className={visibleItems[index] ? 'show' : ''}
+                                style={{ transitionDelay: `${index * 0.2}s` }} // Delay animation for sequential effect
+                            >
+                                <TimelineItem
+                                >
+                                    <TimelineContent  >
+                                        <EducationCard education={education} />
+                                    </TimelineContent>
+                                    <TimelineSeparator>
+                                        <TimelineDot variant="outlined" color="secondary" />
+                                        {index !== experiences.length && <TimelineConnector style={{ background: '#854CE6' }} />}
+                                    </TimelineSeparator>
+                                </TimelineItem>
+                            </TimelineItemWrapper>
                         ))}
                     </Timeline>
 
@@ -106,4 +168,4 @@ const index = () => {
     )
 }
 
-export default index
+export default Education;
